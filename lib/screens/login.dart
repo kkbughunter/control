@@ -3,6 +3,8 @@ import 'package:control/screens/forget_password.dart';
 import 'package:control/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:control/screens/register.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class AppLoginScreen extends StatefulWidget {
   const AppLoginScreen({super.key});
@@ -66,7 +68,7 @@ class _AppLoginScreenState extends State<AppLoginScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -104,11 +106,16 @@ class _AppLoginScreenState extends State<AppLoginScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Padding(
-                padding: const EdgeInsets.only(top: 4, left: 30, right: 30),
+                padding: const EdgeInsets.only(top: 4, left: 90, right: 90),
                 child: loginButton(),
               ),
+              SizedBox(height: 30),
+              // google auth option will be added here
+              buildCustomButton("button", () {
+                print("hello");
+              }),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -192,6 +199,25 @@ class _AppLoginScreenState extends State<AppLoginScreen> {
           borderRadius: BorderRadius.circular(25),
         ),
         backgroundColor: Colors.blue[900],
+      ),
+    );
+  }
+
+  Widget buildCustomButton(String title, Function()? onTap) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 50, right: 50),
+      child: SizedBox(
+        height: 60, // Adjust height as needed
+        child: SignInButton(
+          Buttons.Google,
+          mini: false,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+          onPressed: () async {
+            await AuthManage().LoginWithGoogle();
+          },
+        ),
       ),
     );
   }
