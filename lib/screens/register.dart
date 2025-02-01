@@ -1,3 +1,4 @@
+import 'package:control/authmanagement/auth_manage.dart';
 import 'package:flutter/material.dart';
 
 class AppRegisterPage extends StatefulWidget {
@@ -8,7 +9,7 @@ class AppRegisterPage extends StatefulWidget {
 }
 
 class _AppRegisterPageState extends State<AppRegisterPage> {
-  bool _isPasswordVisible = false;
+  bool _isPasswordVisible = true;
   final _signFormKey = GlobalKey<FormState>();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -61,6 +62,7 @@ class _AppRegisterPageState extends State<AppRegisterPage> {
                   ),
                 ),
               ),
+              SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -84,13 +86,16 @@ class _AppRegisterPageState extends State<AppRegisterPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   validator: (_passwordController) {
                     if (_passwordController!.length < 6) {
                       return "Password lengith must be at least 6 characters";
+                    } else if (_passwordController !=
+                        _confirmPasswordController.text.trim()) {
+                      return "Password does not match";
                     }
                     return null;
                   },
@@ -122,7 +127,7 @@ class _AppRegisterPageState extends State<AppRegisterPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -160,14 +165,42 @@ class _AppRegisterPageState extends State<AppRegisterPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.only(top: 4, left: 50, right: 50),
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_signFormKey.currentState!.validate()) {
-                      print("Email: ${_emailController.text}");
-                      print("Password: ${_passwordController.text}");
+                      try {
+                        await AuthManage().register(
+                          _emailController.text.trim(),
+                          _passwordController.text.trim(),
+                        );
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.green,
+                            content: Text(
+                              "Registration successful!",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text(
+                              "The email address is already in use.",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        );
+                      }
                     }
                   },
                   child: Text("Submit",

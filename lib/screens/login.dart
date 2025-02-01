@@ -1,3 +1,5 @@
+import 'package:control/authmanagement/auth_manage.dart';
+import 'package:control/screens/forget_password.dart';
 import 'package:flutter/material.dart';
 import 'package:control/screens/register.dart';
 
@@ -9,7 +11,7 @@ class AppLoginScreen extends StatefulWidget {
 }
 
 class _AppLoginScreenState extends State<AppLoginScreen> {
-  bool _isPasswordVisible = false;
+  bool _isPasswordVisible = true;
   final _signFormKey = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -98,10 +100,28 @@ class _AppLoginScreenState extends State<AppLoginScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 4, left: 30, right: 30),
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_signFormKey.currentState!.validate()) {
-                      print("Email: ${_emailController.text}");
-                      print("Password: ${_passwordController.text}");
+                      try {
+                        await AuthManage().login(
+                          _emailController.text.trim(),
+                          _passwordController.text.trim(),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Login successful")),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(
+                                "Invalid credentials Email ID or password",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                        );
+                      }
                     }
                   },
                   child: Text("Login",
@@ -121,7 +141,14 @@ class _AppLoginScreenState extends State<AppLoginScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AppForgetPasswordPage(),
+                          ),
+                        );
+                      },
                       child: Text('Forgot Password?'),
                     ),
                   ),
