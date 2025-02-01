@@ -21,10 +21,10 @@ exceptionHandler(String errorCode) {
 }
 
 class AuthManage {
+  final _auth = FirebaseAuth.instance;
   Future<User> register(String email, String password) async {
     try {
-      final userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -38,8 +38,7 @@ class AuthManage {
 
   Future<User> login(String email, String password) async {
     try {
-      final userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -52,7 +51,7 @@ class AuthManage {
   }
 
   Future<void> logout() async {
-    await FirebaseAuth.instance.signOut();
+    await _auth.signOut();
   }
 
   // Future<void> resetPassword(String email) async {
@@ -73,9 +72,18 @@ class AuthManage {
   //   }
   // }
 
+  // Email _auth
+  Future<void> sendEmailVerificationLink() async {
+    try {
+      await _auth.currentUser?.sendEmailVerification();
+    } catch (e) {
+      throw Exception("An unexpected error occurred: ${e.toString()}");
+    }
+  }
+
   // Logo In with Google
   Future<UserCredential?> LoginWithGoogle() async {
-    try{
+    try {
       final googleUser = await GoogleSignIn().signIn();
 
       final googleAuth = await googleUser!.authentication;
@@ -86,8 +94,7 @@ class AuthManage {
       );
 
       return await FirebaseAuth.instance.signInWithCredential(credential);
-    }
-    catch(e){
+    } catch (e) {
       throw Exception("An unexpected error occurred: ${e.toString()}");
     }
     return null;

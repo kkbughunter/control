@@ -1,5 +1,6 @@
 import 'package:control/screens/home.dart';
 import 'package:control/screens/login.dart';
+import 'package:control/screens/verification_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -25,9 +26,13 @@ class _WrapperState extends State<Wrapper> {
             // Check if the user is logged in
             if (snapshot.data != null) {
               // User is logged in, show the home page
-              return const HomePage();
+              if (snapshot.data?.emailVerified == true) {
+                return const HomePage();
+              }
+              return const VerificationScreen();
             } else {
               // User is not logged in, show the login screen
+
               return const AppLoginScreen();
             }
           }
