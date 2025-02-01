@@ -54,23 +54,13 @@ class AuthManage {
     await _auth.signOut();
   }
 
-  // Future<void> resetPassword(String email) async {
-  //   try {
-  // await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-  //   } on FirebaseAuthException catch (e) {
-  //     String errorMessage = "Password reset failed. Please try again.";
-
-  //     if (e.code == 'user-not-found') {
-  //       errorMessage = "No user found with this email.";
-  //     } else if (e.code == 'invalid-email') {
-  //       errorMessage = "Invalid email format.";
-  //     }
-
-  //     throw Exception(errorMessage);
-  //   } catch (e) {
-  //     throw Exception("An unexpected error occurred: ${e.toString()}");
-  //   }
-  // }
+  Future<void> resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      throw Exception("An unexpected error occurred: ${e.toString()}");
+    }
+  }
 
   // Email _auth
   Future<void> sendEmailVerificationLink() async {

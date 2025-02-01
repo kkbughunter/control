@@ -51,17 +51,8 @@ class _AppForgetPasswordPageState extends State<AppForgetPasswordPage> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       try {
-                        // await AuthManage()
-                        //     .resetPassword(_emailController.text.trim());
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Colors.green,
-                            content: Text(
-                              "Password reset email sent!",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        );
+                        await AuthManage()
+                            .resetPassword(_emailController.text.trim());
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -75,13 +66,16 @@ class _AppForgetPasswordPageState extends State<AppForgetPasswordPage> {
                       }
                     }
                   },
-                  child: Text("Reset Password"),
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     backgroundColor: Colors.blue[900],
+                  ),
+                  child: Text(
+                    "Reset Password",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
               ),
