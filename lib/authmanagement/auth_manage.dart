@@ -1,23 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthManage {
-  Future<UserCredential> register(String email, String password) async {
+  Future<User> register(String email, String password) async {
     try {
-      return await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final userCredential =  await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      return userCredential.user!;
     } catch (e) {
       throw Exception("Registration failed: ${e.toString()}");
     }
   }
 
-  Future<UserCredential> login(String email, String password) async {
+  Future<User> login(String email, String password) async {
     try {
-      return await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final userCredential =  await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      return userCredential.user!;
     } catch (e) {
       throw Exception("Login failed: ${e.toString()}");
     }
@@ -27,9 +29,6 @@ class AuthManage {
     await FirebaseAuth.instance.signOut();
   }
 
-  User? get currentUser {
-    return FirebaseAuth.instance.currentUser;
-  }
 
   // Future<void> resetPassword(String email) async {
   //   try {

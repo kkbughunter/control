@@ -1,5 +1,6 @@
 import 'package:control/authmanagement/auth_manage.dart';
 import 'package:control/screens/forget_password.dart';
+import 'package:control/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:control/screens/register.dart';
 
@@ -15,6 +16,13 @@ class _AppLoginScreenState extends State<AppLoginScreen> {
   final _signFormKey = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,58 +107,14 @@ class _AppLoginScreenState extends State<AppLoginScreen> {
               SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.only(top: 4, left: 30, right: 30),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (_signFormKey.currentState!.validate()) {
-                      try {
-                        await AuthManage().login(
-                          _emailController.text.trim(),
-                          _passwordController.text.trim(),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Login successful")),
-                        );
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              backgroundColor: Colors.red,
-                              content: Text(
-                                "Invalid credentials Email ID or password",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              )),
-                        );
-                      }
-                    }
-                  },
-                  child: Text("Login",
-                      style: TextStyle(fontSize: 20, color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(0, 60),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    backgroundColor: Colors.blue[900],
-                  ),
-                ),
+                child: loginButton(),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AppForgetPasswordPage(),
-                          ),
-                        );
-                      },
-                      child: Text('Forgot Password?'),
-                    ),
+                    child: forgetPasswordTextButton(),
                   ),
                 ],
               ),
@@ -158,25 +122,76 @@ class _AppLoginScreenState extends State<AppLoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("Don't Have an Account?"),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AppRegisterPage(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Create Account?',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ),
+                  createAccoutnTextButton(),
                 ],
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget createAccoutnTextButton() {
+    return TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AppRegisterPage(),
+          ),
+        );
+      },
+      child: Text(
+        'Create Account?',
+        style: TextStyle(color: Colors.blue),
+      ),
+    );
+  }
+
+  Widget forgetPasswordTextButton() {
+    return TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AppForgetPasswordPage(),
+          ),
+        );
+      },
+      child: Text('Forgot Password?'),
+    );
+  }
+
+  Widget loginButton() {
+    return ElevatedButton(
+      onPressed: () async {
+        if (_signFormKey.currentState!.validate()) {
+          try {
+            await AuthManage().login(
+              _emailController.text.trim(),
+              _passwordController.text.trim(),
+            );
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(
+                    "Invalid credentials Email ID or password",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )),
+            );
+          }
+        }
+      },
+      child: Text("Login", style: TextStyle(fontSize: 20, color: Colors.white)),
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(0, 60),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
+        backgroundColor: Colors.blue[900],
       ),
     );
   }

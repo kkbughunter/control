@@ -1,4 +1,4 @@
-import 'package:control/screens/login.dart';
+import 'package:control/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      home: const AppLoginScreen(),
+      home: const Wrapper(),
     );
   }
 }

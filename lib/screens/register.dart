@@ -17,6 +17,14 @@ class _AppRegisterPageState extends State<AppRegisterPage> {
   TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
+  void dispose() {
+    super.dispose();
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -168,55 +176,47 @@ class _AppRegisterPageState extends State<AppRegisterPage> {
               SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.only(top: 4, left: 50, right: 50),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (_signFormKey.currentState!.validate()) {
-                      try {
-                        await AuthManage().register(
-                          _emailController.text.trim(),
-                          _passwordController.text.trim(),
-                        );
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Colors.green,
-                            content: Text(
-                              "Registration successful!",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        );
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Colors.red,
-                            content: Text(
-                              "The email address is already in use.",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                  },
-                  child: Text("Submit",
-                      style: TextStyle(fontSize: 20, color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(0, 60),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    backgroundColor: Colors.blue[900],
-                  ),
-                ),
+                child: registerButton(),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget registerButton() {
+    return ElevatedButton(
+      onPressed: () async {
+        if (_signFormKey.currentState!.validate()) {
+          try {
+            await AuthManage().register(
+              _emailController.text.trim(),
+              _passwordController.text.trim(),
+            );
+            Navigator.pop(context);
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Colors.red,
+                content: Text(
+                  "The email address is already in use.",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+            );
+          }
+        }
+      },
+      child:
+          Text("Submit", style: TextStyle(fontSize: 20, color: Colors.white)),
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(0, 60),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
+        backgroundColor: Colors.blue[900],
       ),
     );
   }
